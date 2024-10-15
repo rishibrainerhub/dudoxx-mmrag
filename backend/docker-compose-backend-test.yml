@@ -1,0 +1,26 @@
+version: '3'
+
+services:
+  dudoxx-backend:
+    build:
+      context: .
+      dockerfile: Dockerfile
+    container_name: dudoxx-backend
+    ports:
+      - "8000:8000"
+    volumes:
+      - .:/app
+    networks:
+      - dudoxx-network
+    command: api-test
+
+  redis:
+    image: redis:alpine
+    container_name: dudoxx-redis
+    ports:
+      - "6379:6379"
+    networks:
+      - dudo-network
+
+networks:
+  dudoxx-network:

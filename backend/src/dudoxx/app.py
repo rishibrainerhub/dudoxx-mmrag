@@ -4,7 +4,7 @@ from fastapi_limiter import FastAPILimiter
 import redis.asyncio as redis
 
 from dudoxx.database.sqlite.database import setup_sqlite
-from dudoxx.routes.api_key import router as api_key_router
+from dudoxx.routes import api_key, rag
 
 
 async def setup_fastapi_ratelimiter():
@@ -36,4 +36,5 @@ def pong():
     return {"ping": "pong!"}
 
 
-app.include_router(api_key_router, prefix="/v1/api_key", tags=["api_key"])
+app.include_router(api_key.router, prefix="/v1/api_key", tags=["api_key"])
+app.include_router(rag.router, prefix="/v1/rag", tags=["rag"])

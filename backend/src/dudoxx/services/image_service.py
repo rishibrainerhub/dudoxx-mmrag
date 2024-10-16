@@ -1,4 +1,4 @@
-from fastapi import UploadFile, HTTPException
+from fastapi import UploadFile
 from PIL import Image
 import io
 import base64

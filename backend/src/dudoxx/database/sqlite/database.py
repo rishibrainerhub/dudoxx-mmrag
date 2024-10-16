@@ -4,7 +4,7 @@ import os
 
 from dudoxx.database.sqlite.models import Base
 
-database_url = os.getenv("DATABASE_URL", default="sqlite:///./dudoxx.db")
+database_url = os.getenv("DDX_MMRAG_SQLITE_DB")
 
 engine = create_engine(database_url, connect_args={"check_same_thread": False})
 SessionLocal = sessionmaker(autocommit=False, autoflush=False, bind=engine)

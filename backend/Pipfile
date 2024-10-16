@@ -20,8 +20,6 @@ numpy = "*"
 duckduckgo-search = "*"
 faiss-cpu = "*"
 pillow = "*"
-torch = "*"
-clip-interrogator = "*"
 python-multipart = "*"
 
 [dev-packages]

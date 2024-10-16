@@ -12,6 +12,14 @@ The DUDOXX-MMRAG project is an advanced, AI-powered API designed to support heal
 - Integration with OpenAI and DuckDuckGo
 - Secure access management
 
+## Getting Started
+
+1. Clone the repository.
+2. Install Docker and Docker Compose.
+3. Set up environment variables by copying the `.env.template` file to a new file named `.env`
+4. Edit the `.env` file to configure your environment variables as needed.
+5. Use the provided Makefile commands to build and run the project.
+
 ## Docker Compose
 
 The project includes two Docker Compose files:

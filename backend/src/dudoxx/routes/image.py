@@ -4,6 +4,7 @@ from fastapi_limiter.depends import RateLimiter
 from dudoxx.services.image_service import ImageService
 from dudoxx.schemas.image import ImageDescription
 from dudoxx.services.api_key_management_service import ApiKeyMiddleware
+from dudoxx.exceptions.image_exceptions import ErrorProcessingImage, ErrorEncodingImage
 
 router = APIRouter()
 
@@ -18,5 +19,5 @@ async def describe_image(
         image_description = await service.generate_image_description(file)
         return await service.refine_description_with_langchain(image_description.description)
 
-    except Exception as e:
+    except (ErrorProcessingImage, ErrorEncodingImage, Exception) as e:
         raise HTTPException(status_code=status.HTTP_500_INTERNAL_SERVER_ERROR, detail=str(e))

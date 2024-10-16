@@ -8,6 +8,7 @@ from langchain.schema import HumanMessage, SystemMessage
 
 from dudoxx.schemas.image import ImageDescription
 from dudoxx.exceptions.openai_exceptions import handle_openai_api_error
+from dudoxx.exceptions.image_exceptions import ErrorEncodingImage, ErrorProcessingImage
 
 
 class ImageService:
@@ -23,12 +24,15 @@ class ImageService:
             img = img.resize((224, 224))
             return img
         except Exception as e:
-            raise HTTPException(status_code=400, detail=f"Image processing failed: {str(e)}")
+            raise ErrorProcessingImage(f"Error processing image: {str(e)}")
 
     async def encode_image(self, image: Image.Image) -> str:
-        buffered = io.BytesIO()
-        image.save(buffered, format="PNG")
-        return base64.b64encode(buffered.getvalue()).decode("utf-8")
+        try:
+            buffered = io.BytesIO()
+            image.save(buffered, format="PNG")
+            return base64.b64encode(buffered.getvalue()).decode("utf-8")
+        except Exception as e:
+            raise ErrorEncodingImage(f"Error encoding image: {str(e)}")
 
     @handle_openai_api_error
     async def generate_image_description(self, image: UploadFile) -> ImageDescription:

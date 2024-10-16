@@ -3,8 +3,9 @@ from fastapi.middleware.cors import CORSMiddleware
 from fastapi_limiter import FastAPILimiter
 import redis.asyncio as redis
 
+
 from dudoxx.database.sqlite.database import setup_sqlite
-from dudoxx.routes import rag, drug, apikey, image, transcription
+from dudoxx.routes import rag, drug, apikey, image, transcription, speech
 
 
 async def setup_fastapi_ratelimiter():
@@ -40,4 +41,5 @@ app.include_router(apikey.router, prefix="/api/v1", tags=["api_key"])
 app.include_router(drug.router, prefix="/api/v1", tags=["drug"])
 app.include_router(image.router, prefix="/api/v1", tags=["image"])
 app.include_router(transcription.router, prefix="/api/v1", tags=["transcription"])
+app.include_router(speech.router, prefix="/api/v1", tags=["speach"])
 app.include_router(rag.router, prefix="/api/v1/rag", tags=["rag"])

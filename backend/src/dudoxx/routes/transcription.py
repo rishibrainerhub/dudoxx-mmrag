@@ -1,14 +1,16 @@
 from fastapi import APIRouter, File, UploadFile, HTTPException, Query, BackgroundTasks, Depends
 from fastapi.responses import JSONResponse
 import uuid
+from fastapi_limiter.depends import RateLimiter
 
 from dudoxx.services.transcription_service import TranscriptionService
 from dudoxx.schemas.transcription import TranscriptionResponse, TaskResponse
+from dudoxx.services.api_key_management_service import ApiKeyMiddleware
 
 router = APIRouter()
 
 
-@router.post("/transcribe_audio")
+@router.post("/transcribe_audio", dependencies=[Depends(ApiKeyMiddleware()), Depends(RateLimiter(times=5, seconds=60))])
 async def transcribe_audio(
     background_tasks: BackgroundTasks,
     audio: UploadFile = File(...),
@@ -24,10 +26,11 @@ async def transcribe_audio(
     )
 
 
-@router.get("/task_status/{task_id}")
+@router.get(
+    "/task_status/{task_id}", dependencies=[Depends(ApiKeyMiddleware()), Depends(RateLimiter(times=5, seconds=60))]
+)
 async def get_task_status(
-    task_id: str,
-    service: TranscriptionService = Depends(TranscriptionService),
+    task_id: str, service: TranscriptionService = Depends(TranscriptionService)
 ) -> TranscriptionResponse:
     task = await service.cache_service.get(task_id)
     if not task:

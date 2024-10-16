@@ -1,4 +1,3 @@
-import asyncio
 from typing import List, Dict, Any
 from dotenv import load_dotenv
 from langchain_openai import OpenAIEmbeddings

@@ -16,6 +16,13 @@ fastapi-limiter = "~=0.1.6"
 python-dotenv = "*"
 langchain-community = "*"
 langchain-openai = "*"
+numpy = "*"
+duckduckgo-search = "*"
+faiss-cpu = "*"
+pillow = "*"
+torch = "*"
+clip-interrogator = "*"
+python-multipart = "*"
 
 [dev-packages]
 asserts = "~=0.12.0"

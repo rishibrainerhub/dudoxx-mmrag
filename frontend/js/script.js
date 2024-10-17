@@ -11,22 +11,20 @@ function generateApiKey() {
     .then((response) => {
       const apiKey = response.key;
       document.getElementById("apiKeyInput").value = apiKey;
-      document.getElementById("apiKeyInputdrug").value = apiKey;
-      document.getElementById("apiKeyInputdisease").value = apiKey;
-      document.getElementById("apiKeyInputvoice").value = apiKey;
-      document.getElementById("apiKeyInputaudio").value = apiKey;
-      localStorage.setItem("apiKey", apiKey);
       swal("Success", "API Key Generated Successfully!", "success");
     })
     .catch((error) => console.error("Error generating API key:", error));
 }
 
-function copyApiKey() {
+async function copyApiKey() {
   const apiKeyInput = document.getElementById("apiKeyInput");
-  apiKeyInput.select();
-  apiKeyInput.setSelectionRange(0, 99999); // For mobile devices
-  document.execCommand("copy");
-  swal("Success", "API Key Copied Successfully!", "success");
+  try {
+    await navigator.clipboard.writeText(apiKeyInput.value);
+    swal("Success", "API Key Copied Successfully!", "success");
+  } catch (err) {
+    console.error("Failed to copy: ", err);
+    swal("Error", "Failed to copy API Key. Please try again.", "error");
+  }
 }
 
 function handleErrors(response) {
@@ -42,6 +40,8 @@ function handleErrors(response) {
 
 function getDrugInfo() {
   const drugName = document.getElementById("drugName").value.trim();
+  const apiKeyInputdrug = document.getElementById("apiKeyInputdrug");
+
   const includeInteractions = document.getElementById(
     "includeInteractions"
   ).checked;
@@ -56,7 +56,7 @@ function getDrugInfo() {
       method: "GET",
       headers: {
         Accept: "application/json",
-        "X-API-Key": localStorage.getItem("apiKey"),
+        "X-API-Key": apiKeyInputdrug.value,
       },
     }
   )
@@ -96,6 +96,7 @@ function getDrugInfo() {
 
 function getDiseaseInfo() {
   const diseaseName = document.getElementById("diseaseName").value.trim();
+  const apiKeyInputdisease = document.getElementById("apiKeyInputdisease");
   const includeTreatments =
     document.getElementById("includeTreatments").checked;
   const getDiseaseInfoButton = document.getElementById("getDiseaseInfoButton");
@@ -111,7 +112,7 @@ function getDiseaseInfo() {
       method: "GET",
       headers: {
         Accept: "application/json",
-        "X-API-Key": localStorage.getItem("apiKey"),
+        "X-API-Key": apiKeyInputdisease.value,
       },
     }
   )
@@ -156,6 +157,7 @@ function generateSpeech() {
   const voice = document.getElementById("voiceSelect").value;
   const generateSpeechButton = document.getElementById("generateSpeechButton");
   const statusDiv = document.getElementById("status");
+  const apiKeyInputvoice = document.getElementById("apiKeyInputvoice");
 
   // Set button to loading state
   generateSpeechButton.innerHTML = "Generating...";
@@ -166,7 +168,7 @@ function generateSpeech() {
     headers: {
       Accept: "application/json",
       "Content-Type": "application/json",
-      "X-API-Key": localStorage.getItem("apiKey"),
+      "X-API-Key": apiKeyInputvoice.value,
     },
     body: JSON.stringify({ text: textInput, voice: voice }),
   })
@@ -176,7 +178,7 @@ function generateSpeech() {
       console.log("Speech generation started:", data);
       statusDiv.innerHTML = `Status: ${data.status}. </p>
       <p><strong>Progress :</strong> ${data.progress}% </p>`;
-      
+
       checkSpeechStatus(data.task_id);
     })
     .catch((error) => {
@@ -269,6 +271,7 @@ function describeImage() {
   const imageInput = document.getElementById("imageInput").files[0];
   const describeImageButton = document.getElementById("describeImageButton");
   const imageDescriptionDiv = document.getElementById("imageDescription");
+  const apiKeyInputimage = document.getElementById("apiKeyInputimage");
 
   imageDescriptionDiv.style.display = "block";
   if (!imageInput) {
@@ -289,7 +292,7 @@ function describeImage() {
       method: "POST",
       headers: {
         Accept: "application/json",
-        "X-API-Key": localStorage.getItem("apiKey"),
+        "X-API-Key": apiKeyInputimage.value,
       },
       body: formData,
     }
@@ -320,12 +323,12 @@ function uploadAudio() {
   const audioInput = document.getElementById("audioInput").files[0];
   const targetLanguage = document.getElementById("targetLanguage").value;
   const uploadAudioButton = document.getElementById("uploadAudioButton");
+  const apiKeyInputaudio = document.getElementById("apiKeyInputaudio");
 
   if (!audioInput) {
     swal("Error", "Please select an audio file.", "error");
     return;
   }
-
 
   // Set button to loading state
   uploadAudioButton.innerHTML = "Uploading...";
@@ -334,12 +337,14 @@ function uploadAudio() {
   const formData = new FormData();
   formData.append("audio", audioInput);
 
-  console.log(targetLanguage)
+  const apiEndpoint = targetLanguage
+    ? `${url}api/v1/transcribe_audio?target_language=${targetLanguage}`
+    : `${url}api/v1/transcribe_audio`;
 
-  fetch(`${url}api/v1/transcribe_audio?target_language=${targetLanguage}`, {
+  fetch(apiEndpoint, {
     method: "POST",
     headers: {
-      "X-API-Key": localStorage.getItem("apiKey"),
+      "X-API-Key": apiKeyInputaudio.value,
     },
     body: formData,
   })
@@ -349,7 +354,7 @@ function uploadAudio() {
       console.log("Audio upload task started:", data);
       document.getElementById(
         "taskStatus"
-      ).innerHTML = `<p><strong>Status :</strong> ${data.status} </p>`;
+      ).innerHTML = `<p><strong>Status:</strong> ${data.status}</p>`;
       checkTaskStatus(data.task_id);
     })
     .catch((error) => {
@@ -405,19 +410,17 @@ function checkTaskStatus(taskId) {
     });
 }
 
-// Load the stored API key on page load
-document.addEventListener("DOMContentLoaded", () => {
-  const apiKeyInputdrug = document.getElementById("apiKeyInputdrug");
-  const storedApiKey = localStorage.getItem("apiKey");
-  const apiKeyInputdisease = document.getElementById("apiKeyInputdisease");
-  const apiKeyInputvoice = document.getElementById("apiKeyInputvoice");
-  const apiKeyInputaudio = document.getElementById("apiKeyInputaudio");
+function toggleApiKeyVisibility() {
+  const apiKeyInput = document.getElementById("apiKeyInput");
+  const eyeIcon = document.querySelector(".toggle-visibility-btn i");
 
-  if (storedApiKey) {
-    document.getElementById("apiKeyInput").value = storedApiKey;
-    apiKeyInputdrug.value = storedApiKey;
-    apiKeyInputdisease.value = storedApiKey;
-    apiKeyInputvoice.value = storedApiKey;
-    apiKeyInputaudio.value = storedApiKey;
+  if (apiKeyInput.type === "password") {
+    apiKeyInput.type = "text";
+    eyeIcon.classList.remove("fa-eye");
+    eyeIcon.classList.add("fa-eye-slash");
+  } else {
+    apiKeyInput.type = "password";
+    eyeIcon.classList.remove("fa-eye-slash");
+    eyeIcon.classList.add("fa-eye");
   }
-});
+}

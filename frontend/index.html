@@ -5,6 +5,10 @@
     <title>Duddox-mmrag</title>
     <link rel="stylesheet" href="/css/style.css" />
     <script src="https://cdnjs.cloudflare.com/ajax/libs/sweetalert/2.1.2/sweetalert.min.js"></script>
+    <link
+      href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/5.15.3/css/all.min.css"
+      rel="stylesheet"
+    />
   </head>
 
   <body>
@@ -23,12 +27,25 @@
     <!-- Main Content -->
     <div class="main">
       <div class="container">
-        <button onclick="generateApiKey()" type="button">
-          Generate API Key
-        </button>
-        <div id="apiKey">
+        <div id="apiKeyContainer" class="api-key-container">
           <label for="apiKeyInput">API Key:</label>
-          <input type="text" id="apiKeyInput" readonly />
+          <div class="api-key-input-wrapper">
+            <input
+              type="password"
+              style="padding: 8px"
+              id="apiKeyInput"
+              class="api-key-input"
+            />
+            <button
+              class="toggle-visibility-btn"
+              onclick="toggleApiKeyVisibility()"
+            >
+              <i class="fas fa-eye"></i>
+            </button>
+          </div>
+          <button onclick="generateApiKey()" type="button">
+            Generate API Key
+          </button>
           <button onclick="copyApiKey()">Copy Key</button>
         </div>
       </div>
@@ -43,7 +60,11 @@
             placeholder="Enter text to generate speech"
             required
           />
-          <input type="text" id="apiKeyInputvoice" readonly />
+          <input
+            type="text"
+            id="apiKeyInputvoice"
+            placeholder="api-key-input"
+          />
           <label for="voiceSelect">Select Voice:</label>
           <select id="voiceSelect">
             <option value="nova">Nova</option>
@@ -66,7 +87,11 @@
         <h1>Audio Translation</h1>
         <form id="audioTranslationForm" onsubmit="uploadAudio(); return false;">
           <input type="file" id="audioInput" accept="audio/*" required />
-          <input type="text" id="apiKeyInputaudio" readonly />
+          <input
+            type="text"
+            id="apiKeyInputaudio"
+            placeholder="api-key-input"
+          />
           <label for="targetLanguage">Enter Translation Language:</label>
           <input
             type="text"
@@ -90,6 +115,11 @@
             required
             onchange="previewImage();"
           />
+          <input
+            type="text"
+            id="apiKeyInputimage"
+            placeholder="api-key-input"
+          />
           <button type="submit" id="describeImageButton">Describe Image</button>
         </form>
         <img id="imagePreview" alt="Image Preview" style="display: none" />
@@ -107,7 +137,11 @@
               placeholder="Enter drug name"
               required
             />
-            <input type="text" id="apiKeyInputdrug" readonly />
+            <input
+              type="text"
+              id="apiKeyInputdrug"
+              placeholder="api-key-input"
+            />
             <label>
               <input type="checkbox" id="includeInteractions" /> Include
               Interactions
@@ -129,7 +163,11 @@
               placeholder="Enter disease name"
               required
             />
-            <input type="text" id="apiKeyInputdisease" readonly />
+            <input
+              type="text"
+              id="apiKeyInputdisease"
+              placeholder="api-key-input"
+            />
             <label>
               <input type="checkbox" id="includeTreatments" /> Include
               Treatments

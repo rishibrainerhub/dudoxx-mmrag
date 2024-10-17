@@ -25,6 +25,83 @@ body {
   z-index: 999;
 }
 
+.api-key-container {
+  margin-bottom: 20px;
+  background-color: #ffffff;
+  border-radius: 8px;
+  padding: 25px;
+  box-shadow: 0 4px 10px rgba(0, 0, 0, 0.1);
+}
+
+.api-key-input-wrapper {
+  margin-top: 20px;
+  display: flex;
+  align-items: center;
+  gap: 10px;
+  background-color: #f0f4f8;
+  border: 1px solid #ccc;
+  border-radius: 6px;
+  padding: 5px;
+}
+
+.api-key-input {
+  flex-grow: 1;
+  margin-right: 10px;
+  border: none;
+  padding: 12px;
+  font-size: 14px;
+  outline: none;
+  background-color: transparent;
+}
+
+.toggle-visibility-btn {
+  background: none;
+  border: none;
+  cursor: pointer;
+  color: #6a11cb;
+  padding: 8px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  transition: color 0.3s ease;
+}
+
+.toggle-visibility-btn:focus {
+  outline: none;
+}
+
+.toggle-visibility-btn:hover {
+  color: #2575fc;
+}
+
+.api-key-container button {
+  background: linear-gradient(90deg, #6a11cb, #2575fc);
+  color: #fff;
+  border: none;
+  padding: 12px 25px;
+  font-size: 18px;
+  border-radius: 6px;
+  cursor: pointer;
+  transition: all 0.3s ease;
+  box-shadow: 0px 6px 15px rgba(0, 0, 0, 0.2);
+  margin-top: 10px;
+}
+
+.api-key-container button:hover {
+  background: linear-gradient(90deg, #2575fc, #6a11cb);
+  box-shadow: 0px 12px 20px rgba(0, 0, 0, 0.3);
+  transform: scale(1.05);
+}
+
+.api-key-container {
+  display: block;
+  margin-bottom: 5px;
+  font-weight: bold;
+  color: #6a11cb;
+  font-size: 14px;
+}
+
+
 .logo {
   font-size: 30px;
   margin-left: 30px;
@@ -205,3 +282,4 @@ p {
     width: 100%;
   }
 }
+

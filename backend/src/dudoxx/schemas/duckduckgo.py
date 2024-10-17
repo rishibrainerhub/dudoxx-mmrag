@@ -7,7 +7,7 @@ class DrugInfo(BaseModel):
     description: str
     dosage: str
     side_effects: str
-    interactions: str
+    interactions: Optional[str] = None
 
 
 class DiseaseInfo(BaseModel):

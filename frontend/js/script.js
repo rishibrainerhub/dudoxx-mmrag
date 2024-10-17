@@ -163,6 +163,8 @@ function generateSpeech() {
   generateSpeechButton.innerHTML = "Generating...";
   generateSpeechButton.disabled = true;
 
+  console.log(apiKeyInputvoice)
+
   fetch(`${url}api/v1/generate_speech`, {
     method: "POST",
     headers: {
@@ -193,12 +195,13 @@ function generateSpeech() {
 function checkSpeechStatus(taskId) {
   const statusDiv = document.getElementById("status");
   statusDiv.style.display = "block";
+  const apiKeyInputvoice = document.getElementById("apiKeyInputvoice");
 
   fetch(`${url}api/v1/speech_status/${taskId}`, {
     method: "GET",
     headers: {
       Accept: "application/json",
-      "X-API-Key": localStorage.getItem("apiKey"),
+      "X-API-Key": apiKeyInputvoice.value,
     },
   })
     .then(handleErrors)
@@ -225,12 +228,13 @@ function checkSpeechStatus(taskId) {
 function downloadAudioFile(taskId) {
   const downloadDiv = document.getElementById("download");
   downloadDiv.style.display = "block";
+  const apiKeyInputvoice = document.getElementById("apiKeyInputvoice");
 
   fetch(`${url}api/v1/download_speech/${taskId}`, {
     method: "GET",
     headers: {
       Accept: "application/json",
-      "X-API-Key": localStorage.getItem("apiKey"),
+      "X-API-Key": apiKeyInputvoice.value,
     },
   })
     .then(handleErrors)
@@ -372,11 +376,12 @@ function checkTaskStatus(taskId) {
   const translationResultDiv = document.getElementById("translationResult");
   taskStatusDiv.style.display = "block";
   translationResultDiv.style.display = "block";
+  const apiKeyInputaudio = document.getElementById("apiKeyInputaudio");
 
   fetch(`${url}api/v1/task_status/${taskId}`, {
     method: "GET",
     headers: {
-      "X-API-Key": localStorage.getItem("apiKey"),
+      "X-API-Key": apiKeyInputaudio.value,
     },
   })
     .then(handleErrors)

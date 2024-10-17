@@ -26,6 +26,7 @@ class TranscriptionService:
                 "status": "completed",
                 "transcription": transcription,
                 "translation": translation,
+                "progress": 100,
             }
             await self.cache_service.set(task_id, task_data)
         except Exception as e:

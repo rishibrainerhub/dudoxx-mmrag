@@ -354,7 +354,8 @@ function uploadAudio() {
       console.log("Audio upload task started:", data);
       document.getElementById(
         "taskStatus"
-      ).innerHTML = `<p><strong>Status:</strong> ${data.status}</p>`;
+      ).innerHTML = `<p><strong>Status:</strong> ${data.status}</p>
+      <p><strong>Progress:</strong> ${data.progress}%</p>`;
       checkTaskStatus(data.task_id);
     })
     .catch((error) => {

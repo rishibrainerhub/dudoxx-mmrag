@@ -40,12 +40,8 @@ class ImageService:
         base64_image = await self.encode_image(processed_image)
 
         messages = [
-            SystemMessage(
-                content="You are an AI assistant capable of analyzing and providing detailed descriptions of images."
-            ),
-            HumanMessage(
-                content=f"Analyze the content of this image and describe what is happening in it: ![Image](data:image/png;base64,{base64_image})"
-            ),
+            SystemMessage(content="Describe what you see in the image in 1-2 short, simple sentences."),
+            HumanMessage(content=f"What is in this image? ![Image](data:image/png;base64,{base64_image})"),
         ]
 
         response = self.llm.invoke(messages)
@@ -59,12 +55,9 @@ class ImageService:
             [
                 (
                     "system",
-                    "You are an AI assistant that enhances descriptions by adding vivid details and engaging language.",
+                    "Add 1-2 simple details about color, size, or action to the description. Keep it brief and natural.",
                 ),
-                (
-                    "human",
-                    "Enhance the following image description to include more detail and vividness: {description}",
-                ),
+                ("human", "Add a few more simple details to this description: {description}"),
             ]
         )
 

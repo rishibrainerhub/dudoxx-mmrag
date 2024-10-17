@@ -82,6 +82,14 @@ class DuckDuckGOService:
             """
             interactions_summary = await self._generate_summary(interactions_query, vector_db, interactions_prompt)
             response["interactions"] = interactions_summary
+            await self.cache.set(cache_key, response)
+            return DrugInfo(
+                name=response["name"],
+                description=response.get("description"),
+                dosage=response.get("dosage"),
+                side_effects=response.get("side_effects"),
+                interactions=response.get("interactions"),
+            )
 
         await self.cache.set(cache_key, response)
         return DrugInfo(

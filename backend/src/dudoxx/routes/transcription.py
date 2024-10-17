@@ -23,6 +23,7 @@ async def transcribe_audio(
     return TaskResponse(
         task_id=task_id,
         status="processing",
+        progress=0,
     )
 
 

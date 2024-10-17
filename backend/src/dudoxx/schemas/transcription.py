@@ -10,3 +10,4 @@ class TranscriptionResponse(BaseModel):
 class TaskResponse(BaseModel):
     task_id: str
     status: str
+    progress: int = 0

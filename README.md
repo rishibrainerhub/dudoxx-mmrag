@@ -25,8 +25,8 @@ DUDOXX-MMRAG is an advanced, AI-powered API designed to support healthcare profe
 
 1. Clone the repository:
    ```
-   git clone https://github.com/your-username/DUDOXX-MMRAG.git
-   cd DUDOXX-MMRAG
+   git clone https://github.com/rishibrainerhub/dudoxx-mmrag
+   cd dudoxx-mmrag
    ```
 
 2. Set up environment variables:

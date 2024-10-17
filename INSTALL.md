@@ -17,8 +17,8 @@ Before you begin, ensure you have the following installed on your system:
 
    Open a terminal and run:
    ```
-   git clone https://github.com/your-username/DUDOXX-MMRAG.git
-   cd DUDOXX-MMRAG
+   git clone https://github.com/rishibrainerhub/dudoxx-mmrag
+   cd dudoxx-mmrag
    ```
 
 2. **Set Up Environment Variables**

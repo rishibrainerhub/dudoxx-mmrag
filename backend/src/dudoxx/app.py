@@ -2,14 +2,18 @@ from fastapi import FastAPI
 from fastapi.middleware.cors import CORSMiddleware
 from fastapi_limiter import FastAPILimiter
 import redis.asyncio as redis
-
+import os
 
 from dudoxx.database.sqlite.database import setup_sqlite
 from dudoxx.routes import rag, drug, apikey, image, transcription, speech
 
+redis_host = os.getenv("DDX_MMRAG_REDIS_HOST")
+redis_port = os.getenv("DDX_MMRAG_REDIS_PORT")
+redis_dns = f"redis://{redis_host}:{redis_port}"
+
 
 async def setup_fastapi_ratelimiter():
-    redis_connection = redis.from_url("redis://redis:6379", encoding="utf-8", decode_responses=True)
+    redis_connection = redis.from_url(redis_dns, encoding="utf-8", decode_responses=True)
     await FastAPILimiter.init(redis_connection)
 
 

@@ -1,0 +1,124 @@
+<!DOCTYPE html>
+<html lang="en">
+  <head>
+    <meta charset="UTF-8" />
+    <title>Duddox-mmrag</title>
+    <link rel="stylesheet" href="/css/style.css" />
+  </head>
+
+  <body>
+    <!-- Navigation Bar -->
+    <nav class="navbar">
+      <div class="logo">Info Generator</div>
+      <ul class="nav-links">
+        <li><a href="#speechForm">Text-to-Speech</a></li>
+        <li><a href="#imageForm">Image Description</a></li>
+        <li><a href="#drugForm">Drug Info</a></li>
+        <li><a href="#diseaseForm">Disease Info</a></li>
+      </ul>
+    </nav>
+
+    <!-- Main Content -->
+    <div class="main">
+      <div class="container">
+        <button onclick="generateApiKey()" type="button">
+          Generate API Key
+        </button>
+        <div id="apiKey">
+          <label for="apiKeyInput">API Key:</label>
+          <input type="text" id="apiKeyInput" readonly />
+          <button onclick="copyApiKey()">Copy Key</button>
+        </div>
+      </div>
+
+      <div class="text-container">
+        <h1>Text-to-Speech Generator</h1>
+        <form id="speechForm" onsubmit="generateSpeech(); return false;">
+          <input
+            type="text"
+            id="textInput"
+            placeholder="Enter text to generate speech"
+            required
+          />
+          <input type="text" id="apiKeyInputvoice" readonly />
+          <label for="voiceSelect">Select Voice:</label>
+          <select id="voiceSelect">
+            <option value="nova">Nova</option>
+            <option value="alloy">Alloy</option>
+            <option value="echo">Echo</option>
+            <option value="fable">Fable</option>
+            <option value="onyx">Onyx</option>
+            <option value="shimme">Shimme</option>
+          </select>
+          <button type="submit" id="generateSpeechButton">
+            Generate Speech
+          </button>
+        </form>
+        <div id="status"></div>
+        <div id="download"></div>
+      </div>
+
+      <div class="image-container">
+        <h1>Image Description Generator</h1>
+        <form id="imageForm" onsubmit="describeImage(); return false;">
+          <input
+            type="file"
+            id="imageInput"
+            accept="image/*"
+            required
+            onchange="previewImage();"
+          />
+          <button type="submit" id="describeImageButton">Describe Image</button>
+        </form>
+        <img id="imagePreview" alt="Image Preview" style="display: none" />
+        <div id="imageDescription"></div>
+      </div>
+
+      <div class="druginfo">
+        <div class="drug_input">
+          <h1>Drug Information</h1>
+          <form id="drugForm" onsubmit="getDrugInfo(); return false;">
+            <input
+              type="text"
+              id="drugName"
+              placeholder="Enter drug name"
+              required
+            />
+            <input type="text" id="apiKeyInputdrug" readonly />
+            <label>
+              <input type="checkbox" id="includeInteractions" /> Include
+              Interactions
+            </label>
+            <button type="submit" id="getDrugInfoButton">Get Drug Info</button>
+          </form>
+        </div>
+        <div id="drugInfo"></div>
+      </div>
+
+      <div class="diseaseinfo">
+        <div class="disease_input">
+          <h1>Disease Information</h1>
+          <form id="diseaseForm" onsubmit="getDiseaseInfo(); return false;">
+            <input
+              type="text"
+              id="diseaseName"
+              placeholder="Enter disease name"
+              required
+            />
+            <input type="text" id="apiKeyInputdisease" readonly />
+            <label>
+              <input type="checkbox" id="includeTreatments" /> Include
+              Treatments
+            </label>
+            <button type="submit" id="getDiseaseInfoButton">
+              Get Disease Info
+            </button>
+          </form>
+        </div>
+        <div id="diseaseInfo"></div>
+      </div>
+    </div>
+
+    <script src="/js/script.js"></script>
+  </body>
+</html>

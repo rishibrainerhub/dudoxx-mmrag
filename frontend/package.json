@@ -1,0 +1,12 @@
+{
+    "name": "dudoxx-frontend",
+    "version": "1.0.0",
+    "description": "Frontend for Dudoxx application",
+    "scripts": {
+      "watch": "node watch.js"
+    },
+    "dependencies": {
+      "chokidar": "^3.5.3"
+    }
+  }
+  

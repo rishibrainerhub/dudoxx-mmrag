@@ -1,10 +1,15 @@
 import redis.asyncio as redis
 import json
 from typing import Optional
+import os
+
+redis_host = os.getenv("DDX_MMRAG_REDIS_HOST")
+redis_port = os.getenv("DDX_MMRAG_REDIS_PORT")
+redis_dns = f"redis://{redis_host}:{redis_port}"
 
 
 class RedisCacheService:
-    def __init__(self, redis_url: str = "redis://redis:6379") -> None:
+    def __init__(self, redis_url: str = redis_dns) -> None:
         self.redis = redis.from_url(redis_url)
 
     async def set(self, key: str, value: dict, expire: int = 3600) -> None:

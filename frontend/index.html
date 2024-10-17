@@ -4,14 +4,16 @@
     <meta charset="UTF-8" />
     <title>Duddox-mmrag</title>
     <link rel="stylesheet" href="/css/style.css" />
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/sweetalert/2.1.2/sweetalert.min.js"></script>
   </head>
 
   <body>
     <!-- Navigation Bar -->
     <nav class="navbar">
-      <div class="logo">Info Generator</div>
+      <div class="logo">Duddox-mmrag</div>
       <ul class="nav-links">
         <li><a href="#speechForm">Text-to-Speech</a></li>
+        <li><a href="#audioTranslationForm">Audio Translation</a></li>
         <li><a href="#imageForm">Image Description</a></li>
         <li><a href="#drugForm">Drug Info</a></li>
         <li><a href="#diseaseForm">Disease Info</a></li>
@@ -31,6 +33,7 @@
         </div>
       </div>
 
+      <!-- Text-to-Speech container -->
       <div class="text-container">
         <h1>Text-to-Speech Generator</h1>
         <form id="speechForm" onsubmit="generateSpeech(); return false;">
@@ -58,6 +61,25 @@
         <div id="download"></div>
       </div>
 
+      <!-- Audio Translation container -->
+      <div class="audio-container">
+        <h1>Audio Translation</h1>
+        <form id="audioTranslationForm" onsubmit="uploadAudio(); return false;">
+          <input type="file" id="audioInput" accept="audio/*" required />
+          <input type="text" id="apiKeyInputaudio" readonly />
+          <label for="targetLanguage">Enter Translation Language:</label>
+          <input
+            type="text"
+            id="targetLanguage"
+            placeholder="Enter language (e.g., hindi, spanish)"
+          />
+          <button type="submit" id="uploadAudioButton">Translate Audio</button>
+        </form>
+        <div id="taskStatus"></div>
+        <div id="translationResult"></div>
+      </div>
+
+      <!-- image generate container -->
       <div class="image-container">
         <h1>Image Description Generator</h1>
         <form id="imageForm" onsubmit="describeImage(); return false;">
@@ -74,6 +96,7 @@
         <div id="imageDescription"></div>
       </div>
 
+      <!-- Drug info container -->
       <div class="druginfo">
         <div class="drug_input">
           <h1>Drug Information</h1>
@@ -95,6 +118,7 @@
         <div id="drugInfo"></div>
       </div>
 
+      <!-- Disease info container -->
       <div class="diseaseinfo">
         <div class="disease_input">
           <h1>Disease Information</h1>

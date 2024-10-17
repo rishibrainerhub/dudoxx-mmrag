@@ -69,7 +69,8 @@ body {
 .text-container,
 .image-container,
 .druginfo,
-.diseaseinfo {
+.diseaseinfo,
+.audio-container {
   background-color: #ffffff;
   padding: 25px;
   box-shadow: 0 4px 10px rgba(0, 0, 0, 0.1);
@@ -165,7 +166,9 @@ p {
 #download,
 #drugInfo,
 #diseaseInfo,
-#imageDescription {
+#imageDescription,
+#taskStatus,
+#translationResult {
   padding: 15px;
   background-color: #f9f9f9;
   border-radius: 6px;

@@ -20,7 +20,7 @@ from dudoxx.exceptions.apikey_exceptions import (
 from dudoxx.schemas.api_key import ApiKeyResponse
 
 
-class APIKeyManager:
+class APIKeyManagerService:
     def __init__(self, db: Session = Depends(get_db)):
         self.db = db
 
@@ -75,7 +75,7 @@ class APIKeyManager:
 class ApiKeyMiddleware(APIKeyHeader):
     def __init__(self):
         super().__init__(name="X-API-Key", auto_error=False)
-        self.api_key_manager = APIKeyManager()
+        self.api_key_manager = APIKeyManagerService()
         self.db = next(get_db())
 
     async def __call__(self, request: Request):

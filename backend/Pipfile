@@ -21,6 +21,7 @@ duckduckgo-search = "*"
 faiss-cpu = "*"
 pillow = "*"
 python-multipart = "*"
+pydantic-settings = "*"
 
 [dev-packages]
 asserts = "~=0.12.0"

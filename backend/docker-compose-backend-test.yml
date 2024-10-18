@@ -6,13 +6,15 @@ services:
       context: .
       dockerfile: Dockerfile
     container_name: dudoxx-backend
+    env_file:
+      - .env
     ports:
       - "8000:8000"
     volumes:
       - .:/app
     networks:
       - dudoxx-network
-    command: api-test
+    command: api-test service-test
 
   redis:
     image: redis:alpine
@@ -20,7 +22,7 @@ services:
     ports:
       - "6379:6379"
     networks:
-      - dudo-network
+      - dudoxx-network
 
 networks:
   dudoxx-network:

@@ -5,12 +5,12 @@ OS := $(shell uname)
 ifeq ($(OS), Linux)
     # Commands for Linux (Ubuntu)
     DC := docker compose
-    PS := sudo docker ps
-    BUILD := sudo $(DC) -f docker-compose-backend.yml build
-    UP := sudo $(DC) -f docker-compose-backend.yml up
-    DOWN := sudo $(DC) -f docker-compose-backend.yml down
-    TEST-BUILD := sudo $(DC) -f docker-compose-backend-test.yml build
-    TEST-UP := sudo $(DC) -f docker-compose-backend-test.yml up
+    PS := docker ps
+    BUILD := $(DC) -f docker-compose-backend.yml build
+    UP := $(DC) -f docker-compose-backend.yml up
+    DOWN := $(DC) -f docker-compose-backend.yml down
+    TEST-BUILD := $(DC) -f docker-compose-backend-test.yml build
+    TEST-UP := $(DC) -f docker-compose-backend-test.yml up
 	
 else ifeq ($(OS), Windows_NT)
     # Commands for Windows

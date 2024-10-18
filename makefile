@@ -4,7 +4,7 @@ OS := $(shell uname)
 # Use different commands based on the operating system
 ifeq ($(OS), Linux)
     # Commands for Linux (Ubuntu)
-    DC := docker-compose
+    DC := docker compose
     PS := sudo docker ps
     BUILD := sudo $(DC) -f docker-compose.yml build
     UP := sudo $(DC) -f docker-compose.yml up

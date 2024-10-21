@@ -17,6 +17,15 @@ else ifeq ($(OS), Windows_NT)
     BUILD := $(DC) -f docker-compose.yml build
     UP := $(DC) -f docker-compose.yml up
     DOWN := $(DC)-f docker-compose.yml down
+
+else ifeq ($(OS), Darwin)
+    # Commands for Mac arm
+    DC := docker compose
+    PS := docker ps
+    BUILD := $(DC) -f docker-compose.yml build
+    UP := $(DC) -f docker-compose.yml up
+    DOWN := $(DC)-f docker-compose.yml down
+
 else
     $(error Unsupported operating system)
 endif

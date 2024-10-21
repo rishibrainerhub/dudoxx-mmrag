@@ -1,4 +1,5 @@
 import pytest
 
 
-class 
+class Test:
+    pass

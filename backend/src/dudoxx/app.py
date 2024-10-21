@@ -8,7 +8,7 @@ from functools import lru_cache
 from pydantic_settings import BaseSettings
 from contextlib import asynccontextmanager
 from dudoxx.database.sqlite.database import setup_sqlite
-from dudoxx.routes import rag, drug, apikey, image, transcription, speech
+from dudoxx.routes import rag, drug, apikey, image, transcription, speech, deepgrame
 
 
 class Settings(BaseSettings):
@@ -58,6 +58,7 @@ def create_app() -> FastAPI:
         (transcription.router, "transcription", None),
         (speech.router, "speech", None),
         (rag.router, "rag", "/rag"),
+        (deepgrame.router, "deepgram", None),
     ]
 
     for router, tag, additional_prefix in routers:

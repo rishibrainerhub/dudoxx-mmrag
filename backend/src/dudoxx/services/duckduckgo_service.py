@@ -92,6 +92,8 @@ class DuckDuckGOService:
             )
 
         await self.cache.set(cache_key, response)
+        if response.get("error"):
+            raise ValueError(response["error"])
         return DrugInfo(
             name=response["name"],
             description=response.get("description"),

@@ -2,6 +2,9 @@ import redis.asyncio as redis
 import json
 from typing import Optional
 import os
+from dotenv import load_dotenv
+
+load_dotenv()
 
 redis_host = os.getenv("DDX_MMRAG_REDIS_HOST")
 redis_port = os.getenv("DDX_MMRAG_REDIS_PORT")

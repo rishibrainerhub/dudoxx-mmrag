@@ -22,6 +22,8 @@ faiss-cpu = "*"
 pillow = "*"
 python-multipart = "*"
 pydantic-settings = "*"
+v = "*"
+deepgram-sdk = "*"
 
 [dev-packages]
 asserts = "~=0.12.0"

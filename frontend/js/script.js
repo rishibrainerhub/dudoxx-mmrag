@@ -18,6 +18,24 @@ function generateApiKey() {
 
 async function copyApiKey() {
   const apiKeyInput = document.getElementById("apiKeyInput");
+
+  if (!navigator.clipboard) {
+    console.error("Clipboard API not supported");
+    swal("Error", "Clipboard API not supported in this browser.", "error");
+    return;
+  }
+
+  if (!apiKeyInput) {
+    console.error("Element not found");
+    swal("Error", "API Key input field not found.", "error");
+    return;
+  }
+
+  if (!apiKeyInput.value) {
+    swal("Error", "No API Key to copy.", "error");
+    return;
+  }
+
   try {
     await navigator.clipboard.writeText(apiKeyInput.value);
     swal("Success", "API Key Copied Successfully!", "success");
@@ -163,7 +181,7 @@ function generateSpeech() {
   generateSpeechButton.innerHTML = "Generating...";
   generateSpeechButton.disabled = true;
 
-  console.log(apiKeyInputvoice)
+  console.log(apiKeyInputvoice);
 
   fetch(`${url}api/v1/generate_speech`, {
     method: "POST",

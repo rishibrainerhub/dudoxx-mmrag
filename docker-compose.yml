@@ -1,6 +1,19 @@
 version: '3'
 
 services:
+  pg_vector:
+    image: ankane/pgvector:latest
+    environment:
+      POSTGRES_USER: dudoxx
+      POSTGRES_PASSWORD: dudoxx
+      POSTGRES_DB: dudoxx
+    ports:
+      - "5433:5432"
+    volumes:
+      - dudoxx-data:/var/lib/postgresql/data
+    networks:
+      - dudoxx-network
+
   dudoxx-backend:
     build:
       context: ./backend
@@ -38,3 +51,6 @@ services:
 
 networks:
   dudoxx-network:
+
+volumes:
+  dudoxx-data:

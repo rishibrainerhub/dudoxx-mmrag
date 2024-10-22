@@ -2,19 +2,13 @@ from fastapi import FastAPI, APIRouter
 from fastapi.middleware.cors import CORSMiddleware
 from fastapi_limiter import FastAPILimiter
 import redis.asyncio as redis
-import os
 from typing import List, Tuple, Optional, Dict
 from functools import lru_cache
-from pydantic_settings import BaseSettings
 from contextlib import asynccontextmanager
 from dudoxx.database.sqlite.database import setup_sqlite
-from dudoxx.routes import rag, drug, apikey, image, transcription, speech, deepgrame
-
-
-class Settings(BaseSettings):
-    redis_host: str = os.getenv("DDX_MMRAG_REDIS_HOST", "localhost")
-    redis_port: int = int(os.getenv("DDX_MMRAG_REDIS_PORT", 6379))
-    redis_dns: str = f"redis://{redis_host}:{redis_port}"
+from dudoxx.database.pgvector.database import setup_pgvector
+from dudoxx.routes import rag, drug, apikey, image, transcription, speech, deepgrame, rag_pgvector
+from dudoxx.config import Settings
 
 
 @lru_cache()
@@ -32,6 +26,7 @@ async def setup_fastapi_ratelimiter() -> None:
 async def lifespan(app: FastAPI):
     await setup_fastapi_ratelimiter()
     setup_sqlite()
+    setup_pgvector()
     yield
 
 
@@ -59,6 +54,7 @@ def create_app() -> FastAPI:
         (speech.router, "speech", None),
         (rag.router, "rag", "/rag"),
         (deepgrame.router, "deepgram", None),
+        (rag_pgvector.router, "rag_pgvector", None),
     ]
 
     for router, tag, additional_prefix in routers:

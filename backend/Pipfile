@@ -24,6 +24,8 @@ python-multipart = "*"
 pydantic-settings = "*"
 v = "*"
 deepgram-sdk = "*"
+pgvector = "*"
+pypdf2 = "*"
 
 [dev-packages]
 asserts = "~=0.12.0"

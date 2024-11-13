@@ -4,6 +4,7 @@ from dudoxx.pgvector_rag.vector_store import VectorStore
 from dudoxx.pgvector_rag.rag import RAGSystem
 from dudoxx.schemas.rag_pgvector import QuestionResponse
 import asyncio
+from docling.document_converter import DocumentConverter
 
 
 class RAGService:
@@ -65,12 +66,9 @@ class RAGService:
         """
         Extract text from a PDF file.
         """
-        text = ""
-        with open(file_path, "rb") as file:
-            pdf_reader = PyPDF2.PdfReader(file)
-            for page in pdf_reader.pages:
-                text += page.extract_text() + "\n"
-        return text
+        converter = DocumentConverter()
+        result = converter.convert(file_path)
+        return result.document.export_to_text()
 
     def _chunk_text(self, text: str, chunk_size: int = 1000) -> List[str]:
         """

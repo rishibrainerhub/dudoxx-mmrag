@@ -26,6 +26,7 @@ v = "*"
 deepgram-sdk = "*"
 pgvector = "*"
 pypdf2 = "*"
+docling = "*"
 
 [dev-packages]
 asserts = "~=0.12.0"

@@ -1,0 +1,335 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>RAG Document Q&A System</title>
+    <link href="https://cdnjs.cloudflare.com/ajax/libs/tailwindcss/2.2.19/tailwind.min.css" rel="stylesheet">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0/css/all.min.css">
+    <style>
+        /* Custom styles to improve design */
+        body {
+            font-family: 'Arial', sans-serif;
+        }
+
+        .container {
+            max-width: 5xl;
+        }
+
+        .bg-gray-100 {
+            background-color: #f9fafb;
+        }
+
+        .text-gray-800 {
+            color: #3b82f6;
+        }
+
+        .text-gray-600 {
+            color: #6b7280;
+        }
+
+        .bg-blue-500 {
+            background-color: #3b82f6;
+        }
+
+        .bg-blue-600 {
+            background-color: #2563eb;
+        }
+
+        .text-blue-500 {
+            color: #3b82f6;
+        }
+
+        .text-red-500 {
+            color: #ef4444;
+        }
+
+        .bg-gray-50 {
+            background-color: #f3f4f6;
+        }
+
+        .text-gray-700 {
+            color: #4f46e5;
+        }
+
+        .text-gray-500 {
+            color: #6b7280;
+        }
+
+        .text-blue-500 {
+            color: #3b82f6;
+        }
+    </style>
+</head>
+
+<body class="bg-gray-100 min-h-screen">
+    <div class="container mx-auto px-4 py-8 max-w-5xl">
+        <!-- Header -->
+        <header class="text-center mb-12">
+            <h1 class="text-4xl font-bold text-gray-800 mb-2">RAG Document Q&A System</h1>
+            <p class="text-gray-600">Upload a PDF and ask questions about its content</p>
+        </header>
+
+        <!-- Back Button -->
+        <div class="mb-4 text-center">
+            <a href="index.html"
+                class="inline-block bg-blue-500 hover:bg-blue-600 text-white font-semibold py-2 px-6 rounded-lg transition duration-200">
+                <i class="fas fa-arrow-left mr-2"></i> Back to Home
+            </a>
+        </div>
+
+        <!-- API Key Input -->
+        <div class="mb-8">
+            <label for="apiKeyInput" class="block text-sm font-medium text-gray-700">API Key:</label>
+            <input type="text" id="apiKeyInput" name="apiKey"
+                class="mt-1 block w-full pl-3 pr-10 py-2 border-gray-300 focus:outline-none focus:ring-indigo-500 focus:border-indigo-500 sm:text-sm rounded-md"
+                placeholder="Enter your API key">
+        </div>
+
+        <!-- Upload Section -->
+        <div class="bg-white rounded-lg shadow-md p-6 mb-8">
+            <div class="border-2 border-dashed border-gray-300 rounded-lg p-8 text-center" id="dropZone">
+                <input type="file" id="fileInput" accept=".pdf" class="hidden">
+                <i class="fas fa-file-pdf text-4xl text-gray-400 mb-4"></i>
+                <h3 class="text-lg font-semibold mb-2">Drop your PDF here</h3>
+                <p class="text-gray-500 mb-4">or</p>
+                <button onclick="document.getElementById('fileInput').click()"
+                    class="bg-blue-500 hover:bg-blue-600 text-white font-semibold py-2 px-6 rounded-lg transition duration-200">
+                    Browse Files
+                </button>
+            </div>
+
+            <!-- Upload Progress -->
+            <div id="uploadProgress" class="mt-6 hidden">
+                <div class="flex items-center justify-between mb-2">
+                    <span class="text-sm font-medium text-gray-700" id="progressStatus">Processing...</span>
+                    <span class="text-sm font-medium text-gray-700" id="progressPercent">0%</span>
+                </div>
+                <div class="w-full bg-gray-200 rounded-full h-2.5">
+                    <div class="bg-blue-500 h-2.5 rounded-full transition-all duration-300" id="progressBar"
+                        style="width: 0%"></div>
+                </div>
+            </div>
+
+            <!-- Error Message -->
+            <div id="errorMessage" class="mt-4 hidden">
+                <p class="text-red-500 text-sm"></p>
+            </div>
+        </div>
+
+        <!-- Q&A Section -->
+        <div id="qaSection" class="bg-white rounded-lg shadow-md p-6 hidden">
+            <h2 class="text-2xl font-semibold mb-6">Ask Questions</h2>
+            <div class="mb-6">
+                <div class="flex gap-4">
+                    <input type="text" id="questionInput"
+                        class="flex-1 border rounded-lg px-4 py-2 focus:outline-none focus:ring-2 focus:ring-blue-500"
+                        placeholder="Type your question here...">
+                    <button onclick="askQuestion()"
+                        class="bg-blue-500 hover:bg-blue-600 text-white font-semibold py-2 px-6 rounded-lg transition duration-200">
+                        Ask
+                    </button>
+                </div>
+            </div>
+
+            <!-- Answer Display -->
+            <div id="answerSection" class="hidden">
+                <div class="bg-gray-50 rounded-lg p-6">
+                    <h3 class="font-semibold mb-2">Answer:</h3>
+                    <p id="answerText" class="text-gray-700"></p>
+                    <div class="mt-4">
+                        <h4 class="font-semibold text-sm text-gray-600">Sources:</h4>
+                        <ul id="sourcesText" class="text-sm text-gray-600 mt-1"></ul>
+                    </div>
+                    <div class="mt-4">
+                        <span class="text-sm text-gray-500">Confidence Score: </span>
+                        <span id="confidenceScore" class="text-sm font-semibold text-blue-500"></span>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <script>
+        // API Configuration
+        const API_BASE_URL = 'http://localhost:8000/api/v1'; // Updated to match your local server
+        const API_KEY = document.getElementById('apiKeyInput').value;
+
+        // Variables
+        let currentTaskId = null;
+        let progressCheckInterval = null;
+
+        // Error Display Function
+        function showError(message) {
+            const errorDiv = document.getElementById('errorMessage');
+            errorDiv.querySelector('p').textContent = message;
+            errorDiv.classList.remove('hidden');
+            setTimeout(() => {
+                errorDiv.classList.add('hidden');
+            }, 5000); // Hide after 5 seconds
+        }
+
+        // Event Listeners
+        document.getElementById('fileInput').addEventListener('change', handleFileUpload);
+
+        // Drag and Drop Handlers
+        const dropZone = document.getElementById('dropZone');
+
+        dropZone.addEventListener('dragover', (e) => {
+            e.preventDefault();
+            e.stopPropagation();
+            dropZone.classList.add('border-blue-500');
+        });
+
+        dropZone.addEventListener('dragleave', (e) => {
+            e.preventDefault();
+            e.stopPropagation();
+            dropZone.classList.remove('border-blue-500');
+        });
+
+        dropZone.addEventListener('drop', (e) => {
+            e.preventDefault();
+            e.stopPropagation();
+            dropZone.classList.remove('border-blue-500');
+            const file = e.dataTransfer.files[0];
+            if (file && file.type === 'application/pdf') {
+                uploadFile(file);
+            } else {
+                showError('Please upload a PDF file');
+            }
+        });
+
+        // File Upload Handler
+        async function handleFileUpload(event) {
+            const file = event.target.files[0];
+            if (file && file.type === 'application/pdf') {
+                await uploadFile(file);
+            } else {
+                showError('Please upload a PDF file');
+            }
+        }
+
+        // File Upload Function
+        async function uploadFile(file) {
+            const formData = new FormData();
+            formData.append('file', file);
+
+            try {
+                document.getElementById('uploadProgress').classList.remove('hidden');
+                updateProgress('Uploading...', 0);
+
+                const response = await fetch(`${API_BASE_URL}/documents/upload`, {
+                    method: 'POST',
+                    headers: {
+                        'X-API-Key': API_KEY,
+                        // Remove Content-Type header to let browser set it with boundary
+                    },
+                    body: formData
+                });
+
+                if (!response.ok) {
+                    const errorData = await response.json();
+                    throw new Error(errorData.detail || 'Upload failed');
+                }
+
+                const data = await response.json();
+                currentTaskId = data.task_id;
+                startProgressCheck();
+            } catch (error) {
+                showError('Error uploading file: ' + error.message);
+                document.getElementById('uploadProgress').classList.add('hidden');
+            }
+        }
+
+        // Progress Checking
+        function startProgressCheck() {
+            if (progressCheckInterval) clearInterval(progressCheckInterval);
+            progressCheckInterval = setInterval(checkProgress, 1000);
+        }
+
+        async function checkProgress() {
+            if (!currentTaskId) return;
+
+            try {
+                const response = await fetch(`${API_BASE_URL}/documents/status/${currentTaskId}`, {
+                    headers: {
+                        'X-API-Key': API_KEY
+                    }
+                });
+
+                if (!response.ok) {
+                    throw new Error('Failed to check progress');
+                }
+
+                const data = await response.json();
+                updateProgress(data.status, data.progress);
+
+                if (data.status === 'Completed') {
+                    clearInterval(progressCheckInterval);
+                    document.getElementById('qaSection').classList.remove('hidden');
+                }
+            } catch (error) {
+                showError('Error checking progress: ' + error.message);
+                clearInterval(progressCheckInterval);
+            }
+        }
+
+        function updateProgress(status, progress) {
+            document.getElementById('progressStatus').textContent = status;
+            document.getElementById('progressPercent').textContent = `${progress}%`;
+            document.getElementById('progressBar').style.width = `${progress}%`;
+        }
+
+        // Question Handling
+        async function askQuestion() {
+            const questionInput = document.getElementById('questionInput');
+            const question = questionInput.value.trim();
+
+            if (!question) {
+                showError('Please enter a question');
+                return;
+            }
+
+            try {
+                const response = await fetch(`${API_BASE_URL}/rag/question`, {
+                    method: 'POST',
+                    headers: {
+                        'Content-Type': 'application/json',
+                        'X-API-Key': API_KEY
+                    },
+                    body: JSON.stringify({
+                        question: question
+                    })
+                });
+
+                if (!response.ok) {
+                    throw new Error('Failed to get answer');
+                }
+
+                const data = await response.json();
+                displayAnswer(data);
+            } catch (error) {
+                showError('Error asking question: ' + error.message);
+            }
+        }
+
+        function displayAnswer(data) {
+            document.getElementById('answerSection').classList.remove('hidden');
+            document.getElementById('answerText').textContent = data.answer;
+
+            const sourcesList = document.getElementById('sourcesText');
+            sourcesList.innerHTML = '';
+            data.sources.forEach(source => {
+                const li = document.createElement('li');
+                li.textContent = source;
+                sourcesList.appendChild(li);
+            });
+
+            document.getElementById('confidenceScore').textContent =
+                `${(data.confidence_score * 100).toFixed(1)}%`;
+        }
+    </script>
+</body>
+
+</html>

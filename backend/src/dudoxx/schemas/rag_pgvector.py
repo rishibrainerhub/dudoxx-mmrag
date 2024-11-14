@@ -1,5 +1,6 @@
 from pydantic import BaseModel
 from typing import List
+import uuid
 
 
 class QuestionRequest(BaseModel):
@@ -12,7 +13,7 @@ class QuestionResponse(BaseModel):
     confidence_score: float
 
 
-class DocumentResponse(BaseModel):
-    id: int
+class DocumentTaskResponse(BaseModel):
+    task_id: str
     status: str
-    message: str
+    progress: int = 0

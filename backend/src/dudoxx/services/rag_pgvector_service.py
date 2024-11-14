@@ -1,10 +1,10 @@
 from typing import List, Dict, Any
-import PyPDF2
 from dudoxx.pgvector_rag.vector_store import VectorStore
 from dudoxx.pgvector_rag.rag import RAGSystem
 from dudoxx.schemas.rag_pgvector import QuestionResponse
 import asyncio
 from docling.document_converter import DocumentConverter
+from dudoxx.services.redis_service import RedisCacheService
 
 
 class RAGService:
@@ -14,19 +14,21 @@ class RAGService:
         self.vector_store = VectorStore()
         self.rag_system = RAGSystem(self.vector_store)
         self._document_status = {}
+        self.cache_service = RedisCacheService()
 
-    async def process_document(self, file_path: str) -> int:
+    async def process_document(self, file_path: str, task_id: str) -> int:
         """
         Process a PDF document and store it in the vector store.
         Returns the document ID.
         """
         try:
+            await self.cache_service.set(task_id, {"status": "Ingesting", "progress": 0})
             # Extract text from PDF
             texts = await asyncio.to_thread(self._extract_text_from_pdf, file_path)
 
             # Split text into chunks
             chunks = await asyncio.to_thread(self._chunk_text, texts)
-
+            await self.cache_service.set(task_id, {"status": "vectorizing", "progress": 50})
             # Add to vector store
             doc_ids = await self.vector_store.add_documents(
                 texts=chunks,
@@ -36,7 +38,7 @@ class RAGService:
             # Store status
             doc_id = hash(file_path)  # Simple hash-based ID
             self._document_status[doc_id] = "processed"
-
+            await self.cache_service.set(task_id, {"status": "Completed", "progress": 100})
             return doc_id
 
         except Exception as e:
@@ -68,7 +70,7 @@ class RAGService:
         """
         converter = DocumentConverter()
         result = converter.convert(file_path)
-        return result.document.export_to_text()
+        return result.document.export_to_text()  # here is the code change
 
     def _chunk_text(self, text: str, chunk_size: int = 1000) -> List[str]:
         """

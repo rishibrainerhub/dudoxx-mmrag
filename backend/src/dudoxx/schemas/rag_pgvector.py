@@ -1,6 +1,5 @@
 from pydantic import BaseModel
-from typing import List
-import uuid
+from typing import List, Optional
 
 
 class QuestionRequest(BaseModel):
@@ -11,9 +10,11 @@ class QuestionResponse(BaseModel):
     answer: str
     sources: List[str]
     confidence_score: float
+    context_id: Optional[str] = None
 
 
 class DocumentTaskResponse(BaseModel):
     task_id: str
     status: str
-    progress: int = 0
+    progress: int
+    context_id: Optional[str] = None
